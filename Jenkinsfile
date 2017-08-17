@@ -1,5 +1,8 @@
 #!groovy
-node {
+pipeline {
+ agent any
+
+ stages {
     stage('Build') {
       agent {
         docker {
@@ -13,7 +16,6 @@ node {
       }
     }
 
-    /*
     stage('Test') {
       agent {
         docker {
@@ -30,6 +32,7 @@ node {
       }
     }
     
+    /*
      stage('Deploy') {
       agent {
         docker {
@@ -42,4 +45,5 @@ node {
       }
     }
     */
+    }
 }
