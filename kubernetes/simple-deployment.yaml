@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: gcr.io/etsy-gke-sandbox/php-ci-prod
+          image: gcr.io/etsy-gke-sandbox/php-ci-prod-jimbo
           resources:
             limits:
               cpu: 50m
