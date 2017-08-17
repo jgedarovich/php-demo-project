@@ -1,6 +1,5 @@
 #!groovy
 node {
- stages {
     stage('Build') {
       agent {
         docker {
