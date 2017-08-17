@@ -1,6 +1,5 @@
 #!groovy
-pipeline {
-
+node {
  stages {
     stage('Build') {
       agent {
