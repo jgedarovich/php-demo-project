@@ -2,7 +2,7 @@
 withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) {
 
     stage('Build') {
-        kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
+        kubernetes.pod('some_ephemeral_builder').withImage('jgedarovich/docker-git-gcloud').inside {  
             checkout scm
             sh """
                 echo ${GCLOUD_CREDS} | base64 -d > ${HOME}/gcp-key.json
@@ -13,15 +13,15 @@ withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')
         }    
     }
     stage('Test') {
-        kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
+        kubernetes.pod('some_ephemeral_builder').withImage('jgedarovich/docker-git-gcloud').inside {  
             //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
-            sh 'echo "TEST: hello from some pod using russjt/docker-git-cloud"'
+            sh 'echo "TEST: hello from some pod using jgedarovich/docker-git-cloud"'
         }    
     }
     stage('Deploy') {
-        kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
+        kubernetes.pod('some_ephemeral_builder').withImage('jgedarovich/docker-git-gcloud').inside {  
             //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
-            sh 'echo "DEPLOY: hello from some pod using russjt/docker-git-cloud"'
+            sh 'echo "DEPLOY: hello from some pod using jgedarovich/docker-git-cloud"'
         }    
     }
 }

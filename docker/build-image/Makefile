@@ -1,6 +1,6 @@
 DOCKER ?= docker
 
-REPO := russjt/docker-git-gcloud
+REPO := jgedarovich/docker-git-gcloud
 DATE := $(shell date '+%Y-%m-%d_%H-%M')
 
 default: container
