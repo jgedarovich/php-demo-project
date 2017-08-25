@@ -3,7 +3,7 @@ withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')
 
     stage('Build') {
         kubernetes.pod('some_ephemeral_builder')
-            .withPrivileged(true).
+            .withPrivileged(true)
             .withImage('jgedarovich/docker-git-gcloud')
             .inside 
         {  
