@@ -1,5 +1,5 @@
 #!groovy
-withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) {
+//withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) {
     stage('Build') {
         kubernetes.pod('some_ephemeral_builder').withPrivileged(true).withImage('jgedarovich/docker-git-gcloud').inside {
             checkout scm
@@ -23,7 +23,7 @@ withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')
             sh 'echo "DEPLOY: hello from some pod using jgedarovich/docker-git-cloud"'
         }    
     }
-}
+//}
 /*
  stages {
     stage('Build') {
