@@ -7,9 +7,13 @@ withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')
             kubernetes.image().withName("jimbo/php-dummy-image-prod").build().fromPath("docker/prod")
         }*/
 
-        kubernetes.pod('some_ephemeral_builder').withNewContainer().withImage('jgedarovich/docker-git-gcloud').withPrivileged(true).inside {  
+        //kubernetes.pod('some_ephemeral_builder').withImage('jgedarovich/docker-git-gcloud').inside {  
+        /*kubernetes.pod('some_ephemeral_builder')
+            .withImage('jgedarovich/docker-git-gcloud')
+            .inside
+        {  */
         
-        //node { // this will use the normal kubernetes plugin worker which is setup for dind / gcloud already.
+        node { // this will use the normal kubernetes plugin worker which is setup for dind / gcloud already.
             checkout scm
             sh 'ls -lrta /usr/bin/gcloud'
             sh "echo ${GCLOUD_CREDS}"
