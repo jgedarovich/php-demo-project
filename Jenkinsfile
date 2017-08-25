@@ -1,23 +1,23 @@
 #!groovy
-kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
-    //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
-    sh 'echo "hello from some pod using russjt/docker-git-cloud"'
-}    
+stage('Build') {
+    kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
+        //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
+        sh 'echo "BUILD: hello from some pod using russjt/docker-git-cloud"'
+    }    
+}
+stage('Test') {
+    kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
+        //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
+        sh 'echo "TEST: hello from some pod using russjt/docker-git-cloud"'
+    }    
+}
+stage('Deploy') {
+    kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
+        //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
+        sh 'echo "DEPLOY: hello from some pod using russjt/docker-git-cloud"'
+    }    
+}
 /*
-node {
- agent {
-    kubernetes {
-      //cloud 'kubernetes-plugin-test'
-      label 'mypod'
-      containerTemplate {
-        name 'maven'
-        image 'maven:3.3.9-jdk-8-alpine'
-        ttyEnabled true
-        command 'cat'
-      }
-    }
-  }
-
  stages {
     stage('Build') {
       agent {
