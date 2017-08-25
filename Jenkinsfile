@@ -1,7 +1,7 @@
 #!groovy
 kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
     //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
-    sh 'hello from some pod using russjt/docker-git-cloud'
+    sh 'echo "hello from some pod using russjt/docker-git-cloud"'
 }    
 /*
 node {
