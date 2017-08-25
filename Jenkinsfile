@@ -11,6 +11,7 @@ withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')
         
         node { // this will use the normal kubernetes plugin worker which is setup for dind / gcloud already.
             checkout scm
+            sh 'ls -lrta /usr/bin/gcloud'
             sh """
                 echo ${GCLOUD_CREDS} | base64 -d > ${HOME}/gcp-key.json
                 gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
