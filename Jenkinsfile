@@ -1,22 +1,29 @@
 #!groovy
-stage('Build') {
-    kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
-        //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
-        checkout scm
-        sh 'echo "BUILD: hello from some pod using russjt/docker-git-cloud"'
-    }    
-}
-stage('Test') {
-    kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
-        //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
-        sh 'echo "TEST: hello from some pod using russjt/docker-git-cloud"'
-    }    
-}
-stage('Deploy') {
-    kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
-        //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
-        sh 'echo "DEPLOY: hello from some pod using russjt/docker-git-cloud"'
-    }    
+withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) {
+
+    stage('Build') {
+        kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
+            checkout scm
+            sh """
+                echo ${GCLOUD_CREDS} | base64 -d > ${HOME}/gcp-key.json
+                gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+                gcloud --quiet config set project etsy-gke-sandbox # maybe this should be baked in to the image 
+                cd docker/prod && make deploy
+            """
+        }    
+    }
+    stage('Test') {
+        kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
+            //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
+            sh 'echo "TEST: hello from some pod using russjt/docker-git-cloud"'
+        }    
+    }
+    stage('Deploy') {
+        kubernetes.pod('some_ephemeral_builder').withImage('russjt/docker-git-gcloud').inside {  
+            //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
+            sh 'echo "DEPLOY: hello from some pod using russjt/docker-git-cloud"'
+        }    
+    }
 }
 /*
  stages {

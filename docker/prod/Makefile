@@ -12,9 +12,11 @@ deploy: container
 	$(GCLOUD) $(DOCKER) -- push $(GCR_REPO):latest
 	$(GCLOUD) $(DOCKER) -- push $(GCR_REPO):$(DATE)
 	$(GCLOUD) $(DOCKER) -- push $(GCR_REPO):$(SHA)
-	docker push $(HUB_REPO):latest
-	docker push $(HUB_REPO):$(DATE)
-	docker push $(HUB_REPO):$(SHA)
+	# TODO: is the following redundant?
+	#docker push $(HUB_REPO):latest
+	#docker push $(HUB_REPO):$(DATE)
+	#docker push $(HUB_REPO):$(SHA)
+
 
 container: 
 	cp -R ../../app	./app
