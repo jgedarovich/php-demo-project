@@ -1,12 +1,7 @@
 #!groovy
 withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) {
-
     stage('Build') {
-        kubernetes.pod('some_ephemeral_builder')
-            .withPrivileged(true)
-            .withImage('jgedarovich/docker-git-gcloud')
-            .inside 
-        {  
+        kubernetes.pod('some_ephemeral_builder').withPrivileged(true).withImage('jgedarovich/docker-git-gcloud').inside {
             checkout scm
             sh """
                 echo ${GCLOUD_CREDS} | base64 -d > ${HOME}/gcp-key.json
