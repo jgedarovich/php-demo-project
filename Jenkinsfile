@@ -22,6 +22,7 @@ podTemplate(
             resourceLimitCpu: '200m',
             resourceRequestMemory: '4000Mi',
             resourceLimitMemory: '4000Mi',
+            workingDir: '/var/www/html',
             command: 'cat'
         ),
 
@@ -55,6 +56,7 @@ podTemplate(
         stage('Test') {
             container('php-ci-prod-jimbo') {
                 sh """
+                pwd
                 cd /var/www/html
                 mkdir test-results
                 ./vendor/bin/phpunit ./test/ --log-junit test-results/result.xml
@@ -63,6 +65,7 @@ podTemplate(
                 ls -lrta /var/www/html/test-results
                 cat /var/www/html/test-results/result.xml
                 """
+                sh "pwd"
                 archiveArtifacts artifacts: '/var/www/html/test-results/*'
                 junit '/var/www/html/test-results/result.xml'
             }
