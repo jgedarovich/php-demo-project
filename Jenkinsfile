@@ -6,8 +6,7 @@ podTemplate(
         //  * change cat to modify the hosts file
         containerTemplate(
             name: 'dind-gcloud',
-            //image: 'jgedarovich/docker-git-gcloud:latest',
-            image: 'docker:dind',
+            image: 'jgedarovich/docker-git-gcloud:latest',
             privileged: true,
             ttyEnabled: true,
             resourceRequestCpu: '200m',
@@ -21,10 +20,12 @@ podTemplate(
     node('spellcorrection-builder') {
         stage('Build') {
             container('dind-gcloud') {
+                sh "ls -lrta /var/run/docker.sock"
                 withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) {
                     catchError {
                         //checkout scm
                         sh """
+                            ls -lrta /var/run/docker.sock
                             docker images
                             ls -lrta /usr/bin/gcloud
                             echo ${GCLOUD_CREDS}
