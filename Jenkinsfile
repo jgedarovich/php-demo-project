@@ -22,7 +22,7 @@ podTemplate(
             container('dind-gcloud') {
                 withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) {
                     catchError {
-                        checkout scm
+                        //checkout scm
                         sh """
                             docker images
                             ls -lrta /usr/bin/gcloud
