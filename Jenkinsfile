@@ -22,7 +22,6 @@ podTemplate(
             resourceLimitCpu: '200m',
             resourceRequestMemory: '4000Mi',
             resourceLimitMemory: '4000Mi',
-            workingDir: '/var/www/html',
             command: 'cat'
         ),
 
