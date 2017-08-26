@@ -58,6 +58,10 @@ podTemplate(
                 cd /var/www/html
                 mkdir test-results
                 ./vendor/bin/phpunit ./test/ --log-junit test-results/result.xml
+                ls -lrta test-results/
+                cat test-results/result.xml
+                ls -lrta /var/www/html/test-results
+                cat /var/www/html/test-results/result.xml
                 """
                 junit '/var/www/html/test-results/result.xml'
             }
