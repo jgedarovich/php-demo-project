@@ -1,43 +1,40 @@
 #!groovy
-withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) {
-
-    stage('Build') {
-        /*node {
-            git 'https://github.com/jgedarovich/php-demo-project.git'
-            kubernetes.image().withName("jimbo/php-dummy-image-prod").build().fromPath("docker/prod")
-        }*/
-
-        //kubernetes.pod('some_ephemeral_builder').withImage('jgedarovich/docker-git-gcloud').inside {  
-        kubernetes.pod('some_ephemeral_builder')
-            .withNewContainer()
-            .withImage('jgedarovich/docker-git-gcloud')
-            .withPrivileged(true)
-            .inside
-        {
-        
-        //node { // this will use the normal kubernetes plugin worker which is setup for dind / gcloud already.
-            checkout scm
-            sh 'ls -lrta /usr/bin/gcloud'
-            sh "echo ${GCLOUD_CREDS}"
-            sh """
-                echo ${GCLOUD_CREDS} | base64 -d > ${HOME}/gcp-key.json
-                cat ${HOME}/gcp-key.json
-                gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-                gcloud --quiet config set project etsy-gke-sandbox # maybe this should be baked in to the image 
-                cd docker/prod && make deploy
-            """
-        }    
-    }
-    stage('Test') {
-        kubernetes.pod('some_ephemeral_builder').withImage('jgedarovich/docker-git-gcloud').inside {  
-            //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
-            sh 'echo "TEST: hello from some pod using jgedarovich/docker-git-cloud"'
-        }    
-    }
-    stage('Deploy') {
-        kubernetes.pod('some_ephemeral_builder').withImage('jgedarovich/docker-git-gcloud').inside {  
-            //git 'https://github.com/jenkinsci/kubernetes-pipeline.git'
-            sh 'echo "DEPLOY: hello from some pod using jgedarovich/docker-git-cloud"'
-        }    
+podTemplate(
+    label: 'spellcorrection-builder',
+    containers: [
+        //TODO:
+        //  * change cat to modify the hosts file
+        containerTemplate(
+            name: 'dind-gcloud',
+            image: 'jgedarovich/docker-git-gcloud:latest',
+            privileged: true,
+            ttyEnabled: true,
+            resourceRequestCpu: '200m',
+            resourceLimitCpu: '200m',
+            resourceRequestMemory: '4000Mi',
+            resourceLimitMemory: '4000Mi',
+            command: 'cat'
+        ),
+  ]
+) {
+    node('spellcorrection-builder') {
+        stage('Build') {
+            container('dind-gcloud') {
+                catchError {
+                    checkout scm
+                    sh """
+                        ls -lrta /usr/bin/gcloud
+                        echo ${GCLOUD_CREDS}
+                        echo ${GCLOUD_CREDS} | base64 -d > ${HOME}/gcp-key.json
+                        cat ${HOME}/gcp-key.json
+                        gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+                        gcloud --quiet config set project etsy-gke-sandbox # maybe this should be baked in to the image
+                        cd docker/prod && make deploy
+                    """
+                    //archiveArtifacts artifacts: '_bazel*'
+                    // bazel-bin/apps/spell_correction/spell_server_java_docker
+                }
+            }
+        }
     }
 }
