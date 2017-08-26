@@ -6,7 +6,8 @@ podTemplate(
         //  * change cat to modify the hosts file
         containerTemplate(
             name: 'dind-gcloud',
-            image: 'jgedarovich/docker-git-gcloud:latest',
+            //image: 'jgedarovich/docker-git-gcloud:latest',
+            image: 'docker:dind',
             privileged: true,
             ttyEnabled: true,
             resourceRequestCpu: '200m',
