@@ -24,6 +24,7 @@ podTemplate(
                     catchError {
                         checkout scm
                         sh """
+                            docker images
                             ls -lrta /usr/bin/gcloud
                             echo ${GCLOUD_CREDS}
                             echo ${GCLOUD_CREDS} | base64 -d > ${HOME}/gcp-key.json
