@@ -63,6 +63,7 @@ podTemplate(
                 ls -lrta /var/www/html/test-results
                 cat /var/www/html/test-results/result.xml
                 """
+                archiveArtifacts artifacts: '/var/www/html/test-results/*'
                 junit '/var/www/html/test-results/result.xml'
             }
         }
