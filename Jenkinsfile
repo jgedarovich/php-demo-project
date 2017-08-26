@@ -32,7 +32,7 @@ podTemplate(
     ]
 ) {
     node('spellcorrection-builder') {
-        stage('Build') {
+        /*stage('Build') {
             container('dind-gcloud') {
                 //sh "ls -lrta /var/run/docker.sock"
                 withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) { // TODO: the iam role associated with these creds requires storage admin 
@@ -53,12 +53,13 @@ podTemplate(
                     }
                 }
             }
-        }
+        }*/
         stage('Test') {
             container('php-ci-prod-jimbo') {
                 withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) { // TODO: the iam role associated with these creds requires storage admin 
                     catchError {
                         sh """
+                            cd /var/www/html
                             mkdir test-results
                             ./vendor/bin/phpunit ./test/ --log-junit test-results/result.xml
                         """
