@@ -18,6 +18,7 @@ podTemplate(
     ],
     volumes: [
         hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'), // for dind bc privlidged alon isn't working...
+        hostPathVolume(mountPath: '/var/lib/docker', hostPath: '/var/lib/docker'), // TODO: might not work
     ]
 ) {
     node('spellcorrection-builder') {
