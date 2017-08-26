@@ -28,6 +28,7 @@ podTemplate(
                     catchError {
                         //checkout scm
                         sh """
+                            export DOCKER_API_VERSION=1.23
                             ls -lrta /var/run/docker.sock
                             docker images
                             ls -lrta /usr/bin/gcloud
