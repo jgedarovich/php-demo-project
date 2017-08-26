@@ -36,36 +36,30 @@ podTemplate(
             container('dind-gcloud') {
                 //sh "ls -lrta /var/run/docker.sock"
                 withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) { // TODO: the iam role associated with these creds requires storage admin 
-                    catchError {
-                        checkout scm
-                        sh """
-                            export DOCKER_API_VERSION=1.23 #necessary for some reason otherwise get client/server mismatch
-                            #ls -lrta /var/run/docker.sock
-                            #docker images
-                            #ls -lrta /usr/bin/gcloud
-                            echo ${GCLOUD_CREDS}
-                            echo ${GCLOUD_CREDS} | base64 -d > ${HOME}/gcp-key.json
-                            #cat ${HOME}/gcp-key.json
-                            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-                            gcloud --quiet config set project etsy-gke-sandbox # maybe this should be baked in to the image
-                            cd docker/prod && make deploy
-                        """
-                    }
+                    checkout scm
+                    sh """
+                        export DOCKER_API_VERSION=1.23 #necessary for some reason otherwise get client/server mismatch
+                        #ls -lrta /var/run/docker.sock
+                        #docker images
+                        #ls -lrta /usr/bin/gcloud
+                        echo ${GCLOUD_CREDS}
+                        echo ${GCLOUD_CREDS} | base64 -d > ${HOME}/gcp-key.json
+                        #cat ${HOME}/gcp-key.json
+                        gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+                        gcloud --quiet config set project etsy-gke-sandbox # maybe this should be baked in to the image
+                        cd docker/prod && make deploy
+                    """
                 }
             }
         }*/
         stage('Test') {
             container('php-ci-prod-jimbo') {
-                withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) { // TODO: the iam role associated with these creds requires storage admin 
-                    catchError {
-                        sh """
-                            cd /var/www/html
-                            mkdir test-results
-                            ./vendor/bin/phpunit ./test/ --log-junit test-results/result.xml
-                        """
-                        junit 'test-results/**/*.xml'
-                    }
-                }
+                sh """
+                cd /var/www/html
+                mkdir test-results
+                ./vendor/bin/phpunit ./test/ --log-junit test-results/result.xml
+                """
+                junit '/var/www/html/test-results/results.xml'
             }
         }
     }
