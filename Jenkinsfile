@@ -15,7 +15,10 @@ podTemplate(
             resourceLimitMemory: '4000Mi',
             command: 'cat'
         ),
-  ]
+    ],
+    volumes: [
+        hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'), // for dind bc privlidged alon isn't working...
+    ]
 ) {
     node('spellcorrection-builder') {
         stage('Build') {
