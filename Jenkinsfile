@@ -59,7 +59,7 @@ podTemplate(
                 mkdir test-results
                 ./vendor/bin/phpunit ./test/ --log-junit test-results/result.xml
                 """
-                junit '/var/www/html/test-results/results.xml'
+                junit '/var/www/html/test-results/result.xml'
             }
         }
     }
