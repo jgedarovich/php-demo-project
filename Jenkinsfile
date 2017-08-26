@@ -20,19 +20,21 @@ podTemplate(
     node('spellcorrection-builder') {
         stage('Build') {
             container('dind-gcloud') {
-                catchError {
-                    checkout scm
-                    sh """
-                        ls -lrta /usr/bin/gcloud
-                        echo ${GCLOUD_CREDS}
-                        echo ${GCLOUD_CREDS} | base64 -d > ${HOME}/gcp-key.json
-                        cat ${HOME}/gcp-key.json
-                        gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-                        gcloud --quiet config set project etsy-gke-sandbox # maybe this should be baked in to the image
-                        cd docker/prod && make deploy
-                    """
-                    //archiveArtifacts artifacts: '_bazel*'
-                    // bazel-bin/apps/spell_correction/spell_server_java_docker
+                withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) {
+                    catchError {
+                        checkout scm
+                        sh """
+                            ls -lrta /usr/bin/gcloud
+                            echo ${GCLOUD_CREDS}
+                            echo ${GCLOUD_CREDS} | base64 -d > ${HOME}/gcp-key.json
+                            cat ${HOME}/gcp-key.json
+                            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+                            gcloud --quiet config set project etsy-gke-sandbox # maybe this should be baked in to the image
+                            cd docker/prod && make deploy
+                        """
+                        //archiveArtifacts artifacts: '_bazel*'
+                        // bazel-bin/apps/spell_correction/spell_server_java_docker
+                    }
                 }
             }
         }
