@@ -26,7 +26,7 @@ podTemplate(
                 sh "ls -lrta /var/run/docker.sock"
                 withCredentials([string(credentialsId: 'GCLOUD_CREDS', variable: 'GCLOUD_CREDS')]) {
                     catchError {
-                        //checkout scm
+                        checkout scm
                         sh """
                             export DOCKER_API_VERSION=1.23
                             ls -lrta /var/run/docker.sock
