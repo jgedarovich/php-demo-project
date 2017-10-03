@@ -1,0 +1,20 @@
+{
+    "name": "russtaylor/php-demo-project",
+    "description": "A simple demo project to test out different CI platforms.",
+    "require-dev": {
+        "phpunit/phpunit": "6.3.*"
+    },
+    "require": {
+        "slim/slim": "3.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "PHPCIDemo\\": "lib"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PHPCIDemo\\": "tests"
+        }
+    }
+}

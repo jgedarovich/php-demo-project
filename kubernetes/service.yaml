@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: php-demo-app-jimbo
+spec: 
+  selector:
+    app: jimbo-dummy-php-app
+  ports: 
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
