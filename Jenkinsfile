@@ -14,5 +14,10 @@ php ./composer.phar install
 '''
       }
     }
+    stage('Deploy') {
+      steps {
+        sh 'echo "hai"'
+      }
+    }
   }
 }
